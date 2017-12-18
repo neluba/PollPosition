@@ -5,13 +5,26 @@
     <string name="poll_date_example" translatable="false">14.12.2017, 16:00 Uhr</string>
     <string name="poll_beacon_label">Beacon:</string>
     <string name="poll_beacon_example" translatable="false">Beacon13</string>
+    <string name="icon_description" translatable="false">Icon</string>
+    <string name="no_beacons_icon_description">No beacons found icon</string>
+    <string name="no_beacons_label">No beacons found</string>
+    <string name="no_beacons_description">There are currently no beacons near your location</string>
 
 
     <!-- poll activity -->
     <string name="details_name">Poll details</string>
-    <string name="details_name_example" translatable="false">First Poll</string>
+    <string name="details_name_example" translatable="false">First poll</string>
     <string name="details_date_label">Created on:</string>
     <string name="details_date_example" translatable="false">14.12.2017, 16:00 Uhr</string>
     <string name="details_beacon_label">Beacon:</string>
     <string name="details_beacon_example" translatable="false">Beacon13</string>
+    <string name="details_options_example" translatable="false">Option one</string>
+    <string name="details_answers_participants_example" translatable="false">70/100</string>
+
+    <!-- create poll -->
+    <string name="create_label">Create a poll</string>
+    <string name="create_name">Name</string>
+    <string name="create_add_answer">Enter an answer</string>
+    <string name="create_answers_label">Add answers</string>
+    <string name="create_save">Save</string>
 </resources>
