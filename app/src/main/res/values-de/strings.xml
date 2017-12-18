@@ -6,4 +6,12 @@
     <string name="poll_beacon_label">Beacon:</string>
     <string name="details_date_label">Erstellt am:</string>
     <string name="details_beacon_label">Beacon:</string>
+    <string name="create_label">Umfrage erstellen</string>
+    <string name="create_name">Name</string>
+    <string name="create_add_answer">Gebe eine Antwort ein</string>
+    <string name="create_answers_label">Antworten hinzufügen</string>
+    <string name="create_save">Speichern</string>
+    <string name="no_beacons_icon_description">Icon für keine Beacons gefunden</string>
+    <string name="no_beacons_label">Keine Beacons gefunden</string>
+    <string name="no_beacons_description">Zur Zeit befinden sich keine Beacons in ihrer Reichweite</string>
 </resources>

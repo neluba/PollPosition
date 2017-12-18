@@ -16,8 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".poll"
+        <activity
+            android:name=".PollDetails"
             android:label="@string/details_name"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".CreatePoll"
+            android:label="@string/create_label"
             android:parentActivityName=".MainActivity"/>
     </application>
 
