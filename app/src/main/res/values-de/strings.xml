@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Poll Position</string>
+    <string name="details_name">Umfrage einzelheiten</string>
+    <string name="poll_date_label">Erstellt am:</string>
+    <string name="poll_beacon_label">Beacon:</string>
+    <string name="details_date_label">Erstellt am:</string>
+    <string name="details_beacon_label">Beacon:</string>
+</resources>

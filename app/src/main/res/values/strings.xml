@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Poll Position</string>
+    <string name="poll_name_example" translatable="false">Survey One</string>
+    <string name="poll_date_label">Created on:</string>
+    <string name="poll_date_example" translatable="false">14.12.2017, 16:00 Uhr</string>
+    <string name="poll_beacon_label">Beacon:</string>
+    <string name="poll_beacon_example" translatable="false">Beacon13</string>
+
+
+    <!-- poll activity -->
+    <string name="details_name">Poll details</string>
+    <string name="details_name_example" translatable="false">First Poll</string>
+    <string name="details_date_label">Created on:</string>
+    <string name="details_date_example" translatable="false">14.12.2017, 16:00 Uhr</string>
+    <string name="details_beacon_label">Beacon:</string>
+    <string name="details_beacon_example" translatable="false">Beacon13</string>
 </resources>
