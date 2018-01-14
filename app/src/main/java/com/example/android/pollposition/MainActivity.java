@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRAS_DATE = "date";
     public static final String EXTRAS_BEACON = "beacon";
 
-    private String closestBeacon;
+    private static String closestBeacon;
     ArrayList<Poll> pollsList = new ArrayList<>();
 
     // Recyclerview variables
@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BeaconManager beaconManager;
     private BeaconRegion region;
+    private static List<String> beaconList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO später wieder zu create ändern und EXTRAS_BEACON übergeben mit closestBeacon
                 Intent createPollIntent;
                 createPollIntent = new Intent(MainActivity.this, CreatePoll.class);
                 createPollIntent.putExtra(EXTRAS_BEACON, closestBeacon);
@@ -90,7 +90,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //start the ranging listener
+        // refill the recyclerview
+        if(beaconList.size() > 0) {
+            fillRecyclerView();
+        }
+        // show the floating action button again, if a nearby beacon was already found
+        if(closestBeacon != null) {
+            setClosestBeacon(closestBeacon);
+        }
+
+        // start the ranging listener
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
             @Override
             public void onServiceReady() {
@@ -98,14 +107,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //search for nearby beacons with the ranging listener
+        // search for nearby beacons with the ranging listener
         beaconManager.setRangingListener(new BeaconManager.BeaconRangingListener() {
             @Override
             public void onBeaconsDiscovered(BeaconRegion beaconRegion, List<Beacon> beacons) {
                 if(!beacons.isEmpty()){
-                    List<String> beaconList = new ArrayList<>();
+                    beaconList = new ArrayList<>();
 
-                    //get all nearby beacon an put the identifier in the beaconList
+                    // get all nearby beacon an put the identifier in the beaconList
                     for(Beacon beacon : beacons){
                         String uuidBeacon = beacon.getProximityUUID().toString();
                         int majorBeacon = beacon.getMajor();
@@ -114,12 +123,9 @@ public class MainActivity extends AppCompatActivity {
                         beaconList.add(identifierBeacon);
                     }
 
-                    //build a JSONArray with the identifier from the beaconList
-                    JSONArray jsonItems = new JSONArray(beaconList);
-                    String itemsString =  jsonItems.toString();
-                    new GetPollsTask().execute(itemsString);
+                    fillRecyclerView();
 
-                    //get the first element of the beaconList to find the nearest beacon
+                    // get the first element of the beaconList to find the nearest beacon
                     Beacon nearestBeacon = beacons.get(0);
                     String uuid = nearestBeacon.getProximityUUID().toString();
                     int major = nearestBeacon.getMajor();
@@ -129,6 +135,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void fillRecyclerView() {
+        // build a JSONArray with the identifier from the beaconList
+        JSONArray jsonItems = new JSONArray(beaconList);
+        String itemsString =  jsonItems.toString();
+        new GetPollsTask().execute(itemsString);
     }
 
     /**
@@ -165,8 +178,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.reload) {
-            // TODO TEST
-            new GetPollsTask().execute("[ \"1\", \"2\" ]");
+            fillRecyclerView();
         }
 
         return super.onOptionsItemSelected(item);
