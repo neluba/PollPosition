@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="max_poll_answers">6</integer>
+    <string name="shared_preferences_name">pollPositionPrefs</string>
+    <string name="server_url" translatable="false">127.0.0.1</string>
+</resources>

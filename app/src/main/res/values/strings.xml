@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Poll Position</string>
-    <string name="poll_name_example" translatable="false">Survey One</string>
+    <string name="poll_name_example" translatable="false">Example name</string>
     <string name="poll_date_label">Created on:</string>
     <string name="poll_date_example" translatable="false">14.12.2017, 16:00 Uhr</string>
     <string name="poll_beacon_label">Beacon:</string>
@@ -27,4 +27,7 @@
     <string name="create_add_answer">Enter an answer</string>
     <string name="create_answers_label">Add answers</string>
     <string name="create_save">Save</string>
+    <string name="create_element_limit">You can\'t create more than 6  answers</string>
+    <string name="create_poll_save_toast_text">Saving your poll</string>
+    <string name="create_poll_duplicate">You can\t enter the same answer twice</string>
 </resources>

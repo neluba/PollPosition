@@ -1,76 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.android.pollposition.CreatePoll">
-
-    <EditText
-        android:id="@+id/create_name"
-        android:layout_width="0dp"
+    android:layout_height="match_parent">
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="@string/create_name"
-        android:inputType="text"
-        android:textColor="@color/primary_text"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:context="com.example.android.pollposition.CreatePoll">
 
-    <TextView
-        android:id="@+id/create_answers_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/create_answers_label"
-        android:textColor="@color/primary_text"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/create_name"
-        app:layout_constraintTop_toBottomOf="@+id/create_name" />
+        <EditText
+            android:id="@+id/create_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/create_name"
+            android:inputType="text"
+            android:textColor="@color/primary_text"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/create_answers"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_answers_label">
+        <TextView
+            android:id="@+id/create_answers_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/create_answers_label"
+            android:textColor="@color/primary_text"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/create_name"
+            app:layout_constraintTop_toBottomOf="@+id/create_name" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/create_answers"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/create_answers_label">
 
-            <EditText
-                android:id="@+id/own_checklist_add_item_name"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/create_add_answer"
-                android:textSize="18sp" />
+                android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/own_checklist_add_item"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_gravity="center_vertical"
-                android:background="@android:color/transparent"
-                android:onClick="addItem"
-                android:scaleType="fitCenter"
-                android:tint="@color/secondary_text"
-                app:srcCompat="@drawable/ic_add_black_48dp" />
+                <EditText
+                    android:id="@+id/poll_element_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/create_add_answer"
+                    android:textSize="18sp" />
 
+                <ImageButton
+                    android:id="@+id/poll_element"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@android:color/transparent"
+                    android:onClick="addItem"
+                    android:scaleType="fitCenter"
+                    android:tint="@color/secondary_text"
+                    app:srcCompat="@drawable/ic_add_black_48dp" />
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>

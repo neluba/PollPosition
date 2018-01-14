@@ -14,4 +14,7 @@
     <string name="no_beacons_icon_description">Icon für keine Beacons gefunden</string>
     <string name="no_beacons_label">Keine Beacons gefunden</string>
     <string name="no_beacons_description">Zur Zeit befinden sich keine Beacons in ihrer Reichweite</string>
+    <string name="create_element_limit">Man kann nicht mehr als 6 Antworten erstellen</string>
+    <string name="create_poll_save_toast_text">Die Umfrage wird gespeichert</string>
+    <string name="create_poll_duplicate">Die Antwort existiert bereits</string>
 </resources>

@@ -8,6 +8,11 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String EXTRAS_POLL_ID = "id";
+    public static final String EXTRAS_NAME = "name";
+    public static final String EXTRAS_DATE = "date";
+    public static final String EXTRAS_BEACON = "beacon";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,7 +24,12 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent createPollIntent = new Intent(MainActivity.this, CreatePoll.class);
+                Intent createPollIntent;
+                createPollIntent = new Intent(MainActivity.this, PollDetails.class);
+                createPollIntent.putExtra(EXTRAS_NAME, "test umfrage");
+                createPollIntent.putExtra(EXTRAS_POLL_ID, 13);
+                createPollIntent.putExtra(EXTRAS_BEACON, "BEACON 1");
+                createPollIntent.putExtra(EXTRAS_DATE, System.currentTimeMillis());
                 startActivity(createPollIntent);
             }
         });

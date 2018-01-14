@@ -78,21 +78,23 @@
             app:layout_constraintTop_toTopOf="@+id/details_beacon_label"
             tools:text="@string/details_beacon_example" />
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
             android:id="@+id/details_options_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:orientation="vertical"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/details_background" />
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
             android:id="@+id/details_answers_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:orientation="vertical"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
