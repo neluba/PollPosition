@@ -9,11 +9,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
+import com.estimote.coresdk.recognition.packets.Beacon;
+import com.estimote.coresdk.service.BeaconManager;
 import com.example.android.pollposition.StorageClasses.Poll;
 
 import org.json.JSONArray;
@@ -25,6 +29,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
     private ConstraintLayout mNoBeacons;
     private MainRecyclerViewAdapter mAdapter;
     private int mPosition = RecyclerView.NO_POSITION;
+    FloatingActionButton fab;
+
+    private BeaconManager beaconManager;
+    private BeaconRegion region;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
         mNoBeacons = (ConstraintLayout) findViewById(R.id.no_beacons);
+
+        beaconManager = new BeaconManager(this);
+        region = new BeaconRegion("all", null, null, null);
 
         // initialize recyclerview
         LinearLayoutManager layoutManager =
@@ -63,23 +75,76 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
 
         // fab initialize
-        FloatingActionButton fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // TODO später wieder zu create ändern und EXTRAS_BEACON übergeben mit closestBeacon
                 Intent createPollIntent;
-                createPollIntent = new Intent(MainActivity.this, PollDetails.class);
-                createPollIntent.putExtra(EXTRAS_POLL_ID, new Long(17));
-                createPollIntent.putExtra(EXTRAS_NAME, "test umfrage");
-                createPollIntent.putExtra(EXTRAS_BEACON, "BEACON 1");
-                createPollIntent.putExtra(EXTRAS_DATE, System.currentTimeMillis());
+                createPollIntent = new Intent(MainActivity.this, CreatePoll.class);
+                createPollIntent.putExtra(EXTRAS_BEACON, closestBeacon);
                 startActivity(createPollIntent);
             }
         });
 
+        //start the ranging listener
+        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
+            @Override
+            public void onServiceReady() {
+                beaconManager.startRanging(region);
+            }
+        });
+
+        //search for nearby beacons with the ranging listener
+        beaconManager.setRangingListener(new BeaconManager.BeaconRangingListener() {
+            @Override
+            public void onBeaconsDiscovered(BeaconRegion beaconRegion, List<Beacon> beacons) {
+                if(!beacons.isEmpty()){
+                    List<String> beaconList = new ArrayList<>();
+
+                    //get all nearby beacon an put the identifier in the beaconList
+                    for(Beacon beacon : beacons){
+                        String uuidBeacon = beacon.getProximityUUID().toString();
+                        int majorBeacon = beacon.getMajor();
+                        int minorBeacon = beacon.getMinor();
+                        String identifierBeacon = buildIdentifier(uuidBeacon, majorBeacon, minorBeacon);
+                        beaconList.add(identifierBeacon);
+                    }
+
+                    //build a JSONArray with the identifier from the beaconList
+                    JSONArray jsonItems = new JSONArray(beaconList);
+                    String itemsString =  jsonItems.toString();
+                    new GetPollsTask().execute(itemsString);
+
+                    //get the first element of the beaconList to find the nearest beacon
+                    Beacon nearestBeacon = beacons.get(0);
+                    String uuid = nearestBeacon.getProximityUUID().toString();
+                    int major = nearestBeacon.getMajor();
+                    int minor = nearestBeacon.getMinor();
+                    String identifier = buildIdentifier(uuid, major, minor);
+                    setClosestBeacon(identifier);
+                }
+            }
+        });
+
         // TODO TEST
-        new GetPollsTask().execute("[ \"1\", \"2\" ]");
+    }
+
+    /**
+     *Build the identifier string with uuid major and minor
+     */
+    private String buildIdentifier(String uuid, int minor, int major){
+        String identifier = uuid + ":" + String.valueOf(major) + ":" + String.valueOf(minor);
+        return identifier;
+    }
+
+    /**
+     *Set the closest beacon
+     */
+    private void setClosestBeacon(String identifier){
+        closestBeacon = identifier;
+        fab.setVisibility(View.VISIBLE);
     }
 
     /**
