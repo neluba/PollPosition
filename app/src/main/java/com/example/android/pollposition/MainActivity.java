@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,10 +27,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String BEACONS_PARAMETER = "beacons";
+    public static final String TIME_PARAMETER = "time";
 
     public static final String EXTRAS_POLL_ID = "id";
     public static final String EXTRAS_NAME = "name";
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 // TODO später wieder zu create ändern und EXTRAS_BEACON übergeben mit closestBeacon
                 Intent createPollIntent;
                 createPollIntent = new Intent(MainActivity.this, CreatePoll.class);
-                createPollIntent.putExtra(EXTRAS_POLL_ID, new Long(17));
+                createPollIntent.putExtra(EXTRAS_POLL_ID, new Long(13));
                 createPollIntent.putExtra(EXTRAS_NAME, "test umfrage");
                 createPollIntent.putExtra(EXTRAS_BEACON, "BEACON 1");
                 createPollIntent.putExtra(EXTRAS_DATE, System.currentTimeMillis());
@@ -79,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // TODO TEST
-        new GetPollsTask().execute("[ \"1\", \"2\" ]");
+        new GetPollsTask().execute("[ \"BEACON 1\", \"2\" ]");
     }
 
     /**
@@ -125,10 +128,16 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
+            // get the time window to look for polls
+            long time = System.currentTimeMillis();
+            time = time- TimeUnit.DAYS.toMillis(getResources().getInteger(R.integer.poll_time_window));
+            String timeString = String.valueOf(time);
+            Log.d("TEST", String.valueOf(System.currentTimeMillis()));
             // build url
             Uri pollsUri = Uri.parse(getString(R.string.server_url)).buildUpon()
                     .appendPath(getString(R.string.server_polls))
                     .appendQueryParameter(BEACONS_PARAMETER, params[0])
+                    .appendQueryParameter(TIME_PARAMETER, timeString)
                     .build();
             URL pollsUrl;
             try {

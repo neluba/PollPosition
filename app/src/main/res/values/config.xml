@@ -4,6 +4,8 @@
     <integer name="max_poll_answers">6</integer>
     <!-- Min character length for a poll name -->
     <integer name="min_poll_name_characters">10</integer>
+    <!-- Time window to look for polls in days -->
+    <integer name="poll_time_window">7</integer>
     <!-- SharedPreferences file name -->
     <string name="shared_preferences_name" translatable="false">pollPositionPrefs</string>
     <!-- Server ip address -->
@@ -16,4 +18,6 @@
     <string name="server_poll_answers" translatable="false">answers.php</string>
     <!-- save answer php file -->
     <string name="server_poll_save_answer" translatable="false">save_answer.php</string>
+    <!-- save poll pho file -->
+    <string name="server_poll_save" translatable="false">save_poll.php</string>
 </resources>

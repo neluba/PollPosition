@@ -51,7 +51,7 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
      */
     @Override
     public void onBindViewHolder(MainAdapterViewHolder holder, int position) {
-       Poll poll = pollList.get(0);
+       Poll poll = pollList.get(position);
 
        // name
         holder.nameView.setText(poll.getName());

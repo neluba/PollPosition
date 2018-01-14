@@ -31,6 +31,7 @@ public class CreatePoll extends AppCompatActivity {
     public static final String POLL_NAME = "name";
     public static final String POLL_DATE = "date";
     public static final String POLL_BEACON = "beacon";
+    public static final String POLL_ANSWERS = "answers";
 
     ArrayList<String> pollElements = new ArrayList<String>();
 
@@ -184,10 +185,11 @@ public class CreatePoll extends AppCompatActivity {
         protected String doInBackground(String... params) {
             // build url
             Uri answerUri = Uri.parse(getString(R.string.server_url)).buildUpon()
-                    .appendPath(getString(R.string.server_poll_save_answer))
+                    .appendPath(getString(R.string.server_poll_save))
                     .appendQueryParameter(POLL_NAME, params[0])
                     .appendQueryParameter(POLL_DATE, params[1])
                     .appendQueryParameter(POLL_BEACON, params[2])
+                    .appendQueryParameter(POLL_ANSWERS, params[3])
                     .build();
             URL answerUrl;
             try {
