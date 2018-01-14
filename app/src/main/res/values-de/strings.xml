@@ -14,9 +14,12 @@
     <string name="no_beacons_icon_description">Icon für keine Beacons gefunden</string>
     <string name="no_beacons_label">Keine Beacons gefunden</string>
     <string name="no_beacons_description">Zur Zeit befinden sich keine Beacons in ihrer Reichweite</string>
-    <string name="create_element_limit">Man kann nicht mehr als 6 Antworten erstellen</string>
+    <string name="create_element_limit">Man kann nicht mehr als %1$d Antworten erstellen</string>
     <string name="create_poll_save_toast_text">Die Umfrage wird gespeichert</string>
     <string name="create_poll_duplicate">Die Antwort existiert bereits</string>
     <string name="details_network_error">Verbindungsfehler</string>
     <string name="reload">Neu laden</string>
+    <string name="create_name_missing">Es fehlt ein Name für die Umfrage</string>
+    <string name="create_name_min_characters">Der Name muss mindestens %1$d  Zeichen lang sein</string>
+    <string name="create_min_answers">Es müssen mindestens zwei Antworten erstellt werden</string>
 </resources>

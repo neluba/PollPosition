@@ -74,16 +74,17 @@ public class CreatePoll extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /** Adds an answer to the poll and adds the view to the linear layout
+    /**
+     * Adds an answer to the poll and adds the view to the linear layout
      *
      * @param v view element
      */
     public void addItem(View v) {
-        if(pollElements.size() < getResources().getInteger(R.integer.max_poll_answers)) {
+        if (pollElements.size() < getResources().getInteger(R.integer.max_poll_answers)) {
             String name = pollElementEditText.getText().toString();
             if (!TextUtils.isEmpty(name)) {
                 // check for duplicate answer
-                for(String pollName : pollElements) {
+                for (String pollName : pollElements) {
                     if (pollName.equals(name)) {
                         Toast.makeText(this,
                                 R.string.create_poll_duplicate,
@@ -103,14 +104,17 @@ public class CreatePoll extends AppCompatActivity {
                 pollElementEditText.setText("");
             }
         } else {
+            String elementLimitString = String.format(getString(R.string.create_element_limit),
+                    getResources().getInteger(R.integer.max_poll_answers));
             Toast.makeText(this,
-                    R.string.create_element_limit,
+                    elementLimitString,
                     Toast.LENGTH_LONG).show();
         }
     }
 
     /**
      * Removes an answer from the poll and also removes it from the linear layout
+     *
      * @param v view element
      */
     public void removeItem(View v) {
@@ -129,9 +133,27 @@ public class CreatePoll extends AppCompatActivity {
     }
 
     public void createAndSave() {
+        // check if everything is ok
+        String name = pollNameEditText.getText().toString();
+        if (TextUtils.isEmpty(name)) {
+            Toast.makeText(this, getString(R.string.create_name_missing), Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (name.length() < getResources().getInteger(R.integer.min_poll_name_characters)) {
+            String minCharsText = String.format(getString(R.string.create_name_min_characters),
+                    getResources().getInteger(R.integer.min_poll_name_characters));
+            Toast.makeText(this, minCharsText, Toast.LENGTH_LONG).show();
+            return;
+        }
+        if(pollElements.size() < 2) {
+            Toast.makeText(this, getString(R.string.create_min_answers), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+
         // convert the answers into a json array
         JSONArray jsonItems = new JSONArray(pollElements);
-        String itemsString =  jsonItems.toString();
+        String itemsString = jsonItems.toString();
 
         String nameString = pollNameEditText.getText().toString();
         String dateString = String.valueOf(System.currentTimeMillis());
@@ -192,10 +214,10 @@ public class CreatePoll extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String response) {
-            if(response == null)
+            if (response == null)
                 return;
 
-            if(response.equals("true")) {
+            if (response.equals("true")) {
                 finish();
             }
         }

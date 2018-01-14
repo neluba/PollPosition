@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // TODO später wieder zu create ändern und EXTRAS_BEACON übergeben mit closestBeacon
                 Intent createPollIntent;
-                createPollIntent = new Intent(MainActivity.this, PollDetails.class);
+                createPollIntent = new Intent(MainActivity.this, CreatePoll.class);
                 createPollIntent.putExtra(EXTRAS_POLL_ID, new Long(17));
                 createPollIntent.putExtra(EXTRAS_NAME, "test umfrage");
                 createPollIntent.putExtra(EXTRAS_BEACON, "BEACON 1");
