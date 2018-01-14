@@ -1,6 +1,7 @@
 package com.example.android.pollposition;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +16,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class CreatePoll extends AppCompatActivity {
+
+    public static final String POLL_NAME = "name";
+    public static final String POLL_DATE = "date";
+    public static final String POLL_BEACON = "beacon";
 
     ArrayList<String> pollElements = new ArrayList<String>();
 
@@ -26,11 +38,17 @@ public class CreatePoll extends AppCompatActivity {
     EditText pollElementEditText;
     LinearLayout pollElementsView;
 
+    private String beaconName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_poll);
+
+        if (getIntent().hasExtra(MainActivity.EXTRAS_BEACON)) {
+            beaconName = getIntent().getStringExtra(MainActivity.EXTRAS_BEACON);
+        }
 
         pollNameEditText = findViewById(R.id.create_name);
         pollElementEditText = findViewById(R.id.poll_element_name);
@@ -111,47 +129,75 @@ public class CreatePoll extends AppCompatActivity {
     }
 
     public void createAndSave() {
+        // convert the answers into a json array
+        JSONArray jsonItems = new JSONArray(pollElements);
+        String itemsString =  jsonItems.toString();
+
+        String nameString = pollNameEditText.getText().toString();
+        String dateString = String.valueOf(System.currentTimeMillis());
+
+        new SavePollTask().execute(nameString, dateString, beaconName, itemsString);
 
     }
 
-    public class SavePollTask extends AsyncTask<URL, Void, String> {
+    /**
+     * Sends the poll to the server, which saves it to the database. The order for the parameter is:
+     * name, date, beacon, answers(as json array)
+     */
+    public class SavePollTask extends AsyncTask<String, Void, String> {
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Toast.makeText(getApplicationContext(),
-                    R.string.create_poll_save_toast_text,
-                    Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        protected String doInBackground(URL... params) {
-            /*
-            URL searchUrl = params[0];
-            String createResult = null;
+        protected String doInBackground(String... params) {
+            // build url
+            Uri answerUri = Uri.parse(getString(R.string.server_url)).buildUpon()
+                    .appendPath(getString(R.string.server_poll_save_answer))
+                    .appendQueryParameter(POLL_NAME, params[0])
+                    .appendQueryParameter(POLL_DATE, params[1])
+                    .appendQueryParameter(POLL_BEACON, params[2])
+                    .build();
+            URL answerUrl;
             try {
-                createResult = NetworkUtils.getResponseFromHttpUrl(searchUrl);
+                answerUrl = new URL(answerUri.toString());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            // open connection
+            String response;
+            try {
+                HttpURLConnection urlConnection = (HttpURLConnection) answerUrl.openConnection();
+                try {
+                    InputStream in = urlConnection.getInputStream();
+
+                    Scanner scanner = new Scanner(in);
+                    scanner.useDelimiter("\\A");
+
+                    boolean hasInput = scanner.hasNext();
+                    response = null;
+                    if (hasInput) {
+                        response = scanner.next();
+                    }
+                    scanner.close();
+                } finally {
+                    urlConnection.disconnect();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
+                return null;
             }
-            return createResult;
-             */
-            return null;
+
+            return response;
         }
 
         @Override
-        protected void onPostExecute(String githubSearchResults) {
-            /*
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (githubSearchResults != null && !githubSearchResults.equals("")) {
-                // COMPLETED (17) Call showJsonDataView if we have valid, non-null results
-                showJsonDataView();
-                mSearchResultsTextView.setText(githubSearchResults);
-            } else {
-                // COMPLETED (16) Call showErrorMessage if the result is null in onPostExecute
-                showErrorMessage();
+        protected void onPostExecute(String response) {
+            if(response == null)
+                return;
+
+            if(response.equals("true")) {
+                finish();
             }
-             */
         }
     }
 }

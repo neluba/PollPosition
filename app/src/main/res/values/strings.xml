@@ -9,6 +9,7 @@
     <string name="no_beacons_icon_description">No beacons found icon</string>
     <string name="no_beacons_label">No beacons found</string>
     <string name="no_beacons_description">There are currently no beacons near your location</string>
+    <string name="reload">Reload</string>
 
 
     <!-- poll activity -->
@@ -20,6 +21,7 @@
     <string name="details_beacon_example" translatable="false">Beacon13</string>
     <string name="details_options_example" translatable="false">Option one</string>
     <string name="details_answers_participants_example" translatable="false">70/100</string>
+    <string name="details_network_error">Network error</string>
 
     <!-- create poll -->
     <string name="create_label">Create a poll</string>
@@ -29,5 +31,6 @@
     <string name="create_save">Save</string>
     <string name="create_element_limit">You can\'t create more than 6  answers</string>
     <string name="create_poll_save_toast_text">Saving your poll</string>
-    <string name="create_poll_duplicate">You can\t enter the same answer twice</string>
+    <string name="create_poll_duplicate">You can\'t enter the same answer twice</string>
+
 </resources>

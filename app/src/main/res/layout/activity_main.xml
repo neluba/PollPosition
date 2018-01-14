@@ -28,7 +28,7 @@
         android:layout_height="match_parent" />
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/reminders_completed"
+        android:id="@+id/no_beacons"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">

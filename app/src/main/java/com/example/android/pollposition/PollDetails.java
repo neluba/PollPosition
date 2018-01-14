@@ -2,6 +2,8 @@ package com.example.android.pollposition;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
@@ -11,9 +13,27 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.android.pollposition.StorageClasses.Answer;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class PollDetails extends AppCompatActivity {
+
+    public static final String POLL_ID_PARAMETER = "id";
+    public static final String ANSWER_NAME_PARAMETER = "name";
+
+    // values for the answers array
+    public static final int NAME_VALUE = 0;
+    public static final int VOTE_VALUE = 1;
 
     long pollId;
 
@@ -25,7 +45,7 @@ public class PollDetails extends AppCompatActivity {
     LinearLayout answersLinearLayout;
 
     ArrayList<String> optionNames = new ArrayList<>();
-    String[][] answersArray;
+    ArrayList<Answer> answersList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,32 +90,20 @@ public class PollDetails extends AppCompatActivity {
             editor.apply();
         }
 
-        optionNames.add("test1");
-        optionNames.add("test2");
-        optionNames.add("test3");
-
-        answersArray = new String[3][2];
-        answersArray[0][0] = "test1";
-        answersArray[0][1] = "44";
-        answersArray[1][0] = "test2";
-        answersArray[1][1] = "23";
-        answersArray[2][0] = "test3";
-        answersArray[2][1] = "33";
-
         // show options or answers
         if (answered == 1) {
-            fillAnswers();
+            new GetAnswersTask().execute();
         } else {
-            fillOptions();
+            new GetOptionsTask().execute();
         }
 
 
     }
 
+    /**
+     * This method gets started by the GetOptionsTask AsyncTask and fills the UI with poll options
+     */
     private void fillOptions() {
-        // start async task
-
-
         // create the views
         int counter = 0;
         for (final String optionName : optionNames) {
@@ -125,25 +133,25 @@ public class PollDetails extends AppCompatActivity {
 
         // count votes
         int voteCount = 0;
-        for (int i = 0; i < answersArray.length; i++) {
-            voteCount = voteCount + Integer.parseInt(answersArray[i][1]);
+        for (int i = 0; i < answersList.size(); i++) {
+            voteCount = voteCount + answersList.get(i).getVotes();
         }
 
         // create the views
         int counter = 0;
-        for (String[] answer : answersArray) {
+        for (Answer answer : answersList) {
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final View answerView = inflater.inflate(R.layout.details_answers_list_item, answersLinearLayout, false);
 
             TextView answerNameView = (TextView) answerView.findViewById(R.id.details_answers_name);
-            answerNameView.setText(answer[0]);
+            answerNameView.setText(answer.getName());
 
             TextView voteCountView = (TextView) answerView.findViewById(R.id.details_answers_participants);
-            String voteText = answer[1] + "/" + String.valueOf(voteCount);
+            String voteText = answer.getVotes() + "/" + String.valueOf(voteCount);
             voteCountView.setText(voteText);
 
             ProgressBar progressBar = (ProgressBar) answerView.findViewById(R.id.details_answers_progressBar);
-            progressBar.setProgress((Integer.parseInt(answer[1]) * 100) / voteCount);
+            progressBar.setProgress((answer.getVotes() * 100) / voteCount);
 
             answersLinearLayout.addView(answerView, counter);
             counter++;
@@ -164,7 +172,207 @@ public class PollDetails extends AppCompatActivity {
         editor.putInt(String.valueOf(pollId), 1);
         editor.apply();
 
-        fillAnswers();
+        // start the async task
+        new SaveAnswerTask().execute(name);
+    }
+
+
+    /**
+     * Downloads all poll options from the server and opens the fillOptions() method
+     */
+    public class GetOptionsTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            // build url
+            Uri optionsUri = Uri.parse(getString(R.string.server_url)).buildUpon()
+                    .appendPath(getString(R.string.server_poll_options))
+                    .appendQueryParameter(POLL_ID_PARAMETER, String.valueOf(pollId))
+                    .build();
+            URL optionsUrl;
+            try {
+                optionsUrl = new URL(optionsUri.toString());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            // open connection
+            String response;
+            try {
+                HttpURLConnection urlConnection = (HttpURLConnection) optionsUrl.openConnection();
+                try {
+                    InputStream in = urlConnection.getInputStream();
+
+                    Scanner scanner = new Scanner(in);
+                    scanner.useDelimiter("\\A");
+
+                    boolean hasInput = scanner.hasNext();
+                    response = null;
+                    if (hasInput) {
+                        response = scanner.next();
+                    }
+                    scanner.close();
+                } finally {
+                    urlConnection.disconnect();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if(response == null)
+                return;
+
+            // convert json array to an arraylist
+            try {
+                JSONArray jsonItems = new JSONArray(response);
+                for (int i = 0; i < jsonItems.length(); i++) {
+                    optionNames.add(jsonItems.get(i).toString());
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            fillOptions();
+        }
+    }
+
+    /**
+     * Downloads all poll answers from the server and opens the fillAnswers() method
+     */
+    public class GetAnswersTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            // build url
+            Uri answersUri = Uri.parse(getString(R.string.server_url)).buildUpon()
+                    .appendPath(getString(R.string.server_poll_answers))
+                    .appendQueryParameter(POLL_ID_PARAMETER, String.valueOf(pollId))
+                    .build();
+            URL answersUrl;
+            try {
+                answersUrl = new URL(answersUri.toString());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            // open connection
+            String response;
+            try {
+                HttpURLConnection urlConnection = (HttpURLConnection) answersUrl.openConnection();
+                try {
+                    InputStream in = urlConnection.getInputStream();
+
+                    Scanner scanner = new Scanner(in);
+                    scanner.useDelimiter("\\A");
+
+                    boolean hasInput = scanner.hasNext();
+                    response = null;
+                    if (hasInput) {
+                        response = scanner.next();
+                    }
+                    scanner.close();
+                } finally {
+                    urlConnection.disconnect();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if(response == null)
+                return;
+
+
+            // first element is always the name, second one is the vote count
+            // convert json array to an arraylist
+            try {
+                JSONArray jsonItems = new JSONArray(response);
+                answersList.clear();
+                for (int i = 0; i < jsonItems.length(); i = i+2) {
+                    Answer answer = new Answer();
+                    answer.setName(jsonItems.get(i).toString());
+                    answer.setVotes(jsonItems.getInt(i+1));
+                    answersList.add(answer);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            fillAnswers();
+        }
+    }
+
+    /**
+     * Sends the answer to the server, which saves it to the database. Afterwards executes a new
+     * GetAnswersTask
+     */
+    public class SaveAnswerTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            // build url
+            Uri answerUri = Uri.parse(getString(R.string.server_url)).buildUpon()
+                    .appendPath(getString(R.string.server_poll_save_answer))
+                    .appendQueryParameter(POLL_ID_PARAMETER, String.valueOf(pollId))
+                    .appendQueryParameter(ANSWER_NAME_PARAMETER, params[0])
+                    .build();
+            URL answerUrl;
+            try {
+                answerUrl = new URL(answerUri.toString());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            // open connection
+            String response;
+            try {
+                HttpURLConnection urlConnection = (HttpURLConnection) answerUrl.openConnection();
+                try {
+                    InputStream in = urlConnection.getInputStream();
+
+                    Scanner scanner = new Scanner(in);
+                    scanner.useDelimiter("\\A");
+
+                    boolean hasInput = scanner.hasNext();
+                    response = null;
+                    if (hasInput) {
+                        response = scanner.next();
+                    }
+                    scanner.close();
+                } finally {
+                    urlConnection.disconnect();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if(response == null)
+                return;
+
+            if(response.equals("true")) {
+                new GetAnswersTask().execute();
+            }
+        }
     }
 
 }

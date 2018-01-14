@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Max answers count for polls -->
     <integer name="max_poll_answers">6</integer>
-    <string name="shared_preferences_name">pollPositionPrefs</string>
-    <string name="server_url" translatable="false">127.0.0.1</string>
+    <!-- SharedPreferences file name -->
+    <string name="shared_preferences_name" translatable="false">pollPositionPrefs</string>
+    <!-- Server ip address -->
+    <string name="server_url" translatable="false">http://192.168.178.21/pollposition</string>
+    <!-- polls php file -->
+    <string name="server_polls" translatable="false">polls.php</string>
+    <!-- options php file -->
+    <string name="server_poll_options" translatable="false">options.php</string>
+    <!-- answers php file -->
+    <string name="server_poll_answers" translatable="false">answers.php</string>
+    <!-- save answer php file -->
+    <string name="server_poll_save_answer" translatable="false">save_answer.php</string>
 </resources>
