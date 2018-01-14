@@ -51,6 +51,7 @@
             app:layout_constraintTop_toBottomOf="@+id/create_answers_label">
 
             <LinearLayout
+                android:id="@+id/create_answer_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">

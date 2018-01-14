@@ -37,6 +37,7 @@ public class CreatePoll extends AppCompatActivity {
     EditText pollNameEditText;
     EditText pollElementEditText;
     LinearLayout pollElementsView;
+    LinearLayout createAnswerLayout;
 
     private String beaconName;
 
@@ -53,6 +54,7 @@ public class CreatePoll extends AppCompatActivity {
         pollNameEditText = findViewById(R.id.create_name);
         pollElementEditText = findViewById(R.id.poll_element_name);
         pollElementsView = findViewById(R.id.create_answers);
+        createAnswerLayout = findViewById(R.id.create_answer_layout);
     }
 
     // create menu
@@ -80,7 +82,9 @@ public class CreatePoll extends AppCompatActivity {
      * @param v view element
      */
     public void addItem(View v) {
-        if (pollElements.size() < getResources().getInteger(R.integer.max_poll_answers)) {
+        int maxPollAnswers = getResources().getInteger(R.integer.max_poll_answers);
+
+        if (pollElements.size() < maxPollAnswers) {
             String name = pollElementEditText.getText().toString();
             if (!TextUtils.isEmpty(name)) {
                 // check for duplicate answer
@@ -102,6 +106,9 @@ public class CreatePoll extends AppCompatActivity {
                 pollElementsView.addView(pollElementView, pollElements.size());
                 pollElements.add(name);
                 pollElementEditText.setText("");
+                // remove the add answer layout, if max answer count has been reached
+                if(pollElements.size() >= maxPollAnswers)
+                    createAnswerLayout.setVisibility(View.GONE);
             }
         } else {
             String elementLimitString = String.format(getString(R.string.create_element_limit),
@@ -130,6 +137,11 @@ public class CreatePoll extends AppCompatActivity {
         }
 
         pollElementsView.removeView((View) v.getParent().getParent());
+
+        // show the create answers layout again, if there is room
+        int maxPollAnswers = getResources().getInteger(R.integer.max_poll_answers);
+        if(pollElements.size() == maxPollAnswers-1)
+            createAnswerLayout.setVisibility(View.VISIBLE);
     }
 
     public void createAndSave() {
