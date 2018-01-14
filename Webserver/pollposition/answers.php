@@ -1,0 +1,1 @@
+[ "Household waste", "44", "Paper", "21", "Glass", "35", "Batteries", "75"]

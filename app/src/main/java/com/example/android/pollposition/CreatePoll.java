@@ -37,6 +37,7 @@ public class CreatePoll extends AppCompatActivity {
     EditText pollNameEditText;
     EditText pollElementEditText;
     LinearLayout pollElementsView;
+    LinearLayout createAnswerLayout;
 
     private String beaconName;
 
@@ -53,6 +54,7 @@ public class CreatePoll extends AppCompatActivity {
         pollNameEditText = findViewById(R.id.create_name);
         pollElementEditText = findViewById(R.id.poll_element_name);
         pollElementsView = findViewById(R.id.create_answers);
+        createAnswerLayout = findViewById(R.id.create_answer_layout);
     }
 
     // create menu
@@ -74,16 +76,19 @@ public class CreatePoll extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /** Adds an answer to the poll and adds the view to the linear layout
+    /**
+     * Adds an answer to the poll and adds the view to the linear layout
      *
      * @param v view element
      */
     public void addItem(View v) {
-        if(pollElements.size() < getResources().getInteger(R.integer.max_poll_answers)) {
+        int maxPollAnswers = getResources().getInteger(R.integer.max_poll_answers);
+
+        if (pollElements.size() < maxPollAnswers) {
             String name = pollElementEditText.getText().toString();
             if (!TextUtils.isEmpty(name)) {
                 // check for duplicate answer
-                for(String pollName : pollElements) {
+                for (String pollName : pollElements) {
                     if (pollName.equals(name)) {
                         Toast.makeText(this,
                                 R.string.create_poll_duplicate,
@@ -101,16 +106,22 @@ public class CreatePoll extends AppCompatActivity {
                 pollElementsView.addView(pollElementView, pollElements.size());
                 pollElements.add(name);
                 pollElementEditText.setText("");
+                // remove the add answer layout, if max answer count has been reached
+                if(pollElements.size() >= maxPollAnswers)
+                    createAnswerLayout.setVisibility(View.GONE);
             }
         } else {
+            String elementLimitString = String.format(getString(R.string.create_element_limit),
+                    getResources().getInteger(R.integer.max_poll_answers));
             Toast.makeText(this,
-                    R.string.create_element_limit,
+                    elementLimitString,
                     Toast.LENGTH_LONG).show();
         }
     }
 
     /**
      * Removes an answer from the poll and also removes it from the linear layout
+     *
      * @param v view element
      */
     public void removeItem(View v) {
@@ -126,12 +137,35 @@ public class CreatePoll extends AppCompatActivity {
         }
 
         pollElementsView.removeView((View) v.getParent().getParent());
+
+        // show the create answers layout again, if there is room
+        int maxPollAnswers = getResources().getInteger(R.integer.max_poll_answers);
+        if(pollElements.size() == maxPollAnswers-1)
+            createAnswerLayout.setVisibility(View.VISIBLE);
     }
 
     public void createAndSave() {
+        // check if everything is ok
+        String name = pollNameEditText.getText().toString();
+        if (TextUtils.isEmpty(name)) {
+            Toast.makeText(this, getString(R.string.create_name_missing), Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (name.length() < getResources().getInteger(R.integer.min_poll_name_characters)) {
+            String minCharsText = String.format(getString(R.string.create_name_min_characters),
+                    getResources().getInteger(R.integer.min_poll_name_characters));
+            Toast.makeText(this, minCharsText, Toast.LENGTH_LONG).show();
+            return;
+        }
+        if(pollElements.size() < 2) {
+            Toast.makeText(this, getString(R.string.create_min_answers), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+
         // convert the answers into a json array
         JSONArray jsonItems = new JSONArray(pollElements);
-        String itemsString =  jsonItems.toString();
+        String itemsString = jsonItems.toString();
 
         String nameString = pollNameEditText.getText().toString();
         String dateString = String.valueOf(System.currentTimeMillis());
@@ -192,10 +226,10 @@ public class CreatePoll extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String response) {
-            if(response == null)
+            if (response == null)
                 return;
 
-            if(response.equals("true")) {
+            if (response.equals("true")) {
                 finish();
             }
         }

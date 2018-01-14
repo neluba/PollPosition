@@ -29,8 +29,11 @@
     <string name="create_add_answer">Enter an answer</string>
     <string name="create_answers_label">Add answers</string>
     <string name="create_save">Save</string>
-    <string name="create_element_limit">You can\'t create more than 6  answers</string>
+    <string name="create_element_limit">You can\'t create more than %1$d answers</string>
     <string name="create_poll_save_toast_text">Saving your poll</string>
     <string name="create_poll_duplicate">You can\'t enter the same answer twice</string>
+    <string name="create_name_missing">Please enter a name for your  poll</string>
+    <string name="create_name_min_characters">The name hast to be at least %1$d character long</string>
+    <string name="create_min_answers">Please create at least two answers</string>
 
 </resources>
