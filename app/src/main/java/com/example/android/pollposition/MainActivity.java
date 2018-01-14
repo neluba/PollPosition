@@ -9,7 +9,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -206,7 +205,6 @@ public class MainActivity extends AppCompatActivity {
             long time = System.currentTimeMillis();
             time = time- TimeUnit.DAYS.toMillis(getResources().getInteger(R.integer.poll_time_window));
             String timeString = String.valueOf(time);
-            Log.d("TEST", String.valueOf(System.currentTimeMillis()));
             // build url
             Uri pollsUri = Uri.parse(getString(R.string.server_url)).buildUpon()
                     .appendPath(getString(R.string.server_polls))
