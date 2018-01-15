@@ -151,7 +151,11 @@ public class PollDetails extends AppCompatActivity {
             voteCountView.setText(voteText);
 
             ProgressBar progressBar = (ProgressBar) answerView.findViewById(R.id.details_answers_progressBar);
-            progressBar.setProgress((answer.getVotes() * 100) / voteCount);
+            // Just to avoid app crashes 
+            if(voteCount == 0)
+                progressBar.setProgress(100);
+            else
+                progressBar.setProgress((answer.getVotes() * 100) / voteCount);
 
             answersLinearLayout.addView(answerView, counter);
             counter++;
