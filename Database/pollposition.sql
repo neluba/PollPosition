@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2018-01-14 17:48:07
+Date: 2018-01-15 00:33:01
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,29 +20,21 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `answers`;
 CREATE TABLE `answers` (
-  `_id` int(11) NOT NULL AUTO_INCREMENT,
+  `_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `poll_id` int(11) DEFAULT NULL,
   `answer` varchar(255) DEFAULT NULL,
   `votes` int(11) DEFAULT NULL,
   PRIMARY KEY (`_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of answers
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for polls
 -- ----------------------------
 DROP TABLE IF EXISTS `polls`;
 CREATE TABLE `polls` (
-  `_id` int(11) NOT NULL AUTO_INCREMENT,
+  `_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `beacon_name` varchar(255) DEFAULT NULL,
-  `date` int(11) NOT NULL,
+  `date` bigint(20) unsigned NOT NULL,
   PRIMARY KEY (`_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of polls
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
