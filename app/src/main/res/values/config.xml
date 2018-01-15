@@ -9,7 +9,7 @@
     <!-- SharedPreferences file name -->
     <string name="shared_preferences_name" translatable="false">pollPositionPrefs</string>
     <!-- Server ip address -->
-    <string name="server_url" translatable="false">http://192.168.178.21/pollposition</string>
+    <string name="server_url" translatable="false">http://134.106.13.186/MobileCommerce</string>
     <!-- polls php file -->
     <string name="server_polls" translatable="false">polls.php</string>
     <!-- options php file -->

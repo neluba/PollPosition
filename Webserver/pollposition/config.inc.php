@@ -1,6 +1,6 @@
 <?php
 	$mysql_host = "localhost";
-	$mysql_user = "root";
-	$mysql_pass = "pw"; 
-	$mysql_dbname = "pollposition";
+	$mysql_user = "felix";
+	$mysql_pass = "felixDB";
+	$mysql_dbname = "beacon_fleet_management";
 ?>
