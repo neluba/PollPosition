@@ -168,10 +168,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static void resetBeaconList() {
-        mAdapter.swapList(null);
-        beaconList.clear();
-        showNoBeaconsFoundError();
-        hideFloatingActionButton();
+        if(mAdapter != null) {
+            mAdapter.swapList(null);
+            beaconList.clear();
+            showNoBeaconsFoundError();
+            hideFloatingActionButton();
+        }
     }
 
     /**
