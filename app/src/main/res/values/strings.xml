@@ -10,6 +10,7 @@
     <string name="no_beacons_label">No beacons found</string>
     <string name="no_beacons_description">There are currently no beacons near your location</string>
     <string name="reload">Reload</string>
+    <string name="loading">Searching for beacons at your location</string>
 
 
     <!-- poll activity -->

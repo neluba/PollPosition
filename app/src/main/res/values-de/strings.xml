@@ -22,4 +22,5 @@
     <string name="create_name_missing">Es fehlt ein Name für die Umfrage</string>
     <string name="create_name_min_characters">Der Name muss mindestens %1$d  Zeichen lang sein</string>
     <string name="create_min_answers">Es müssen mindestens zwei Antworten erstellt werden</string>
+    <string name="loading">Suche nach Beacons in deiner Reichweite</string>
 </resources>

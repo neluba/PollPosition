@@ -65,6 +65,7 @@
             android:layout_marginStart="32dp"
             android:text="@string/details_beacon_label"
             android:textColor="@color/icons"
+            android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="@+id/details_background"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -74,6 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textColor="@color/icons"
+            android:textSize="10sp"
             app:layout_constraintStart_toEndOf="@+id/details_beacon_label"
             app:layout_constraintTop_toTopOf="@+id/details_beacon_label"
             tools:text="@string/details_beacon_example" />
