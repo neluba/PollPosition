@@ -51,9 +51,11 @@ public class MainActivity extends AppCompatActivity {
     // Recyclerview variables
     private RecyclerView mRecyclerView;
     private ConstraintLayout mNoBeacons;
+    private ConstraintLayout mLoading;
     private MainRecyclerViewAdapter mAdapter;
     private int mPosition = RecyclerView.NO_POSITION;
     FloatingActionButton fab;
+
 
     private BeaconManager beaconManager;
     private BeaconRegion region;
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
         mNoBeacons = (ConstraintLayout) findViewById(R.id.no_beacons);
+        mLoading = (ConstraintLayout) findViewById(R.id.loading_constraint_layout);
 
         beaconManager = new BeaconManager(this);
         region = new BeaconRegion("all", null, null, null);
@@ -154,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
         new GetPollsTask().execute(itemsString);
     }
 
+    
+
     /**
      *Build the identifier string with uuid major and minor
      */
@@ -197,11 +202,13 @@ public class MainActivity extends AppCompatActivity {
     private void showRecyclerView() {
         mNoBeacons.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
+        mLoading.setVisibility(View.GONE);
     }
 
     private void showNoBeaconsFoundError() {
         mRecyclerView.setVisibility(View.GONE);
         mNoBeacons.setVisibility(View.VISIBLE);
+        mLoading.setVisibility(View.GONE);
     }
 
     /**
