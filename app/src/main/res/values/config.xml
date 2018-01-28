@@ -6,6 +6,8 @@
     <integer name="min_poll_name_characters">10</integer>
     <!-- Time window to look for polls in days -->
     <integer name="poll_time_window">7</integer>
+    <!-- reset beaconlist timer in seconds -->
+    <integer name="beacon_list_timer">300</integer>
     <!-- SharedPreferences file name -->
     <string name="shared_preferences_name" translatable="false">pollPositionPrefs</string>
     <!-- Server ip address -->

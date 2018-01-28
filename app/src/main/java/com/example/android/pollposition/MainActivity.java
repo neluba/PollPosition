@@ -49,12 +49,12 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Poll> pollsList = new ArrayList<>();
 
     // Recyclerview variables
-    private RecyclerView mRecyclerView;
-    private ConstraintLayout mNoBeacons;
-    private ConstraintLayout mLoading;
-    private MainRecyclerViewAdapter mAdapter;
-    private int mPosition = RecyclerView.NO_POSITION;
-    FloatingActionButton fab;
+    private static RecyclerView mRecyclerView;
+    private static ConstraintLayout mNoBeacons;
+    private static ConstraintLayout mLoading;
+    private static MainRecyclerViewAdapter mAdapter;
+    private static int mPosition = RecyclerView.NO_POSITION;
+    private static FloatingActionButton fab;
 
 
     private BeaconManager beaconManager;
@@ -136,6 +136,11 @@ public class MainActivity extends AppCompatActivity {
                         beaconList.add(identifierBeacon);
                     }
 
+                    // set timer to reset the list
+                    StartAlarm.cancelReminder(getApplicationContext());
+                    StartAlarm.startReminder(getApplicationContext());
+
+
                     fillRecyclerView();
 
                     // get the first element of the beaconList to find the nearest beacon
@@ -151,13 +156,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fillRecyclerView() {
-        // build a JSONArray with the identifier from the beaconList
-        JSONArray jsonItems = new JSONArray(beaconList);
-        String itemsString =  jsonItems.toString();
-        new GetPollsTask().execute(itemsString);
+        if(beaconList != null && !beaconList.isEmpty()) {
+            // build a JSONArray with the identifier from the beaconList
+            JSONArray jsonItems = new JSONArray(beaconList);
+            String itemsString =  jsonItems.toString();
+            new GetPollsTask().execute(itemsString);
+        } else {
+            showNoBeaconsFoundError();
+            hideFloatingActionButton();
+        }
     }
 
-    
+    public static void resetBeaconList() {
+        mAdapter.swapList(null);
+        beaconList.clear();
+        showNoBeaconsFoundError();
+        hideFloatingActionButton();
+    }
 
     /**
      *Build the identifier string with uuid major and minor
@@ -168,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *Set the closest beacon
+     *Set the closest beacon and show the floating action button
      */
     private void setClosestBeacon(String identifier){
         closestBeacon = identifier;
@@ -199,16 +214,20 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showRecyclerView() {
+    private static void showRecyclerView() {
         mNoBeacons.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
         mLoading.setVisibility(View.GONE);
     }
 
-    private void showNoBeaconsFoundError() {
+    private static void showNoBeaconsFoundError() {
         mRecyclerView.setVisibility(View.GONE);
         mNoBeacons.setVisibility(View.VISIBLE);
         mLoading.setVisibility(View.GONE);
+    }
+
+    private static void hideFloatingActionButton() {
+        fab.setVisibility(View.GONE);
     }
 
     /**
