@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -125,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onBeaconsDiscovered(BeaconRegion beaconRegion, List<Beacon> beacons) {
                 if(!beacons.isEmpty()){
-                    beaconList = new ArrayList<>();
 
                     // get all nearby beacon an put the identifier in the beaconList
                     for(Beacon beacon : beacons){
@@ -210,7 +210,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.reload) {
+            beaconList = new ArrayList<>();
             fillRecyclerView();
+            showLoadingScreen();
         }
 
         return super.onOptionsItemSelected(item);
@@ -220,6 +222,12 @@ public class MainActivity extends AppCompatActivity {
         mNoBeacons.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
         mLoading.setVisibility(View.GONE);
+    }
+
+    private static void showLoadingScreen() {
+        mNoBeacons.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.GONE);
+        mLoading.setVisibility(View.VISIBLE);
     }
 
     private static void showNoBeaconsFoundError() {
@@ -253,6 +261,7 @@ public class MainActivity extends AppCompatActivity {
             URL pollsUrl;
             try {
                 pollsUrl = new URL(pollsUri.toString());
+                Log.i("TEST", pollsUri.toString());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
                 return null;
